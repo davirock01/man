@@ -1,0 +1,27 @@
+🚨 PROBLEMA: Docker no puede descargar imágenes (no hay internet o problema DNS)
+
+✅ SOLUCIÓN INMEDIATA:
+
+Haz doble clic en:
+
+    ABRIR_APP_SIN_DOCKER.bat
+
+Este script:
+- Usa Docker SOLO para PostgreSQL y Redis (ya los tienes)
+- Corre el backend LOCAL con Python (no necesita internet)
+- Inicia el frontend normalmente
+
+REQUISITO: Python 3.11+ instalado
+
+Si no tienes Python:
+1. Descarga de: https://www.python.org/downloads/
+2. Instala marcando "Add to PATH"
+3. Ejecuta ABRIR_APP_SIN_DOCKER.bat
+
+---
+
+DESPUÉS (cuando arregles internet/DNS):
+- Lee: SOLUCION_PROBLEMA_DOCKER.md
+- Configura DNS en Docker Desktop
+- Usa: ABRIR_APP.bat
+

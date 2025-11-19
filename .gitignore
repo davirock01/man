@@ -1,0 +1,84 @@
+# ============================================================
+# Fleet Maintenance System - .gitignore
+# ============================================================
+
+# API Keys y configuración sensible
+config/api_keys.env
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+venv/
+ENV/
+env/
+.venv
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# React Native
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Databases (pero necesitamos crear la DB, así que comentamos esto)
+# *.db
+# *.sqlite
+# *.sqlite3
+fleet_maintenance.db
+
+# Docker
+*.log
+
+# Uploads y storage local
+uploads/
+storage/
+

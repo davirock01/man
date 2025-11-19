@@ -1,0 +1,91 @@
+═══════════════════════════════════════════════════════════════
+  SOLUCIÓN: SCRIPT SE CIERRA AUTOMÁTICAMENTE
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA:
+Todos los scripts .bat se cierran inmediatamente sin mostrar nada.
+
+───────────────────────────────────────────────────────────────
+CAUSA POSIBLE:
+───────────────────────────────────────────────────────────────
+
+1. Estás en la carpeta incorrecta
+2. Windows está cerrando los .bat automáticamente por seguridad
+3. Hay un error en la primera línea del script
+4. El script tiene permisos incorrectos
+
+───────────────────────────────────────────────────────────────
+SOLUCIÓN 1: Usar script que NUNCA se cierra
+───────────────────────────────────────────────────────────────
+
+Haz doble clic en:
+
+    ⭐ VER_ERROR.bat
+
+Este script:
+✅ NO se cierra automáticamente
+✅ Muestra todos los mensajes
+✅ Espera que tú lo cierres manualmente
+✅ Captura CUALQUIER error que ocurra
+
+───────────────────────────────────────────────────────────────
+SOLUCIÓN 2: Ejecutar con CMD en lugar de PowerShell
+───────────────────────────────────────────────────────────────
+
+1. Presiona Windows + R
+2. Escribe: cmd
+3. Presiona Enter
+4. Copia y pega:
+
+cd /d "C:\Users\User-PC\Desktop\software engineering\app\man"
+VER_ERROR.bat
+
+───────────────────────────────────────────────────────────────
+SOLUCIÓN 3: Ejecutar paso a paso manualmente
+───────────────────────────────────────────────────────────────
+
+Abre CMD o PowerShell y ejecuta línea por línea:
+
+cd "C:\Users\User-PC\Desktop\software engineering\app\man"
+cd backend
+docker-compose up -d postgres redis
+
+Si algún comando falla, verás el error.
+
+───────────────────────────────────────────────────────────────
+SOLUCIÓN 4: Verificar permisos
+───────────────────────────────────────────────────────────────
+
+1. Haz clic derecho en VER_ERROR.bat
+2. Selecciona "Propiedades"
+3. En la pestaña "General", si hay un botón "Desbloquear", haz clic
+4. Clic en "Aplicar"
+5. Intenta ejecutar de nuevo
+
+───────────────────────────────────────────────────────────────
+QUÉ HACER AHORA:
+───────────────────────────────────────────────────────────────
+
+1. Haz doble clic en: VER_ERROR.bat
+2. Lee TODOS los mensajes que aparecen
+3. Copia el mensaje de error completo
+4. Envíame ese mensaje para ayudarte
+
+───────────────────────────────────────────────────────────────
+SI TODO FALLA: Iniciar manualmente con comandos
+───────────────────────────────────────────────────────────────
+
+Abre CMD y ejecuta:
+
+cd "C:\Users\User-PC\Desktop\software engineering\app\man\backend"
+docker-compose up -d postgres redis
+timeout /t 15
+docker-compose up -d backend
+
+Luego en otra ventana CMD:
+
+cd "C:\Users\User-PC\Desktop\software engineering\app\man\frontend-web"
+npm run dev
+
+═══════════════════════════════════════════════════════════════
+

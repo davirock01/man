@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Maintenance System</title>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <style>
+        /* ============================================================
+           VARIABLES CSS
+           ============================================================ */
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        /* ============================================================
+           RESET Y BASE
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* ============================================================
+           UTILIDADES
+           ============================================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: var(--dark);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ============================================================
+           PÁGINA DE LOGIN
+           ============================================================ */
+        #loginPage {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: var(--shadow-xl);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .login-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-header p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .quick-login {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .quick-login p {
+            font-size: 12px;
+            color: var(--gray);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .quick-login-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .quick-login-btn {
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-login-btn:hover {
+            background: #f3f4f6;
+            border-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        /* ============================================================
+           DASHBOARD
+           ============================================================ */
+        #dashboardPage {
+            min-height: 100vh;
+            background: var(--light);
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .main-content {
+            padding: 32px 0;
+        }
+
+        /* KPIs Grid */
+        .kpis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .kpi-value {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .kpi-target {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Fleet Status */
+        .fleet-status {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Alerts Grid */
+        .alerts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .alert-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .alert-panel:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .alert-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .alert-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .alert-subtitle {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .alert-count {
+            font-size: 56px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Work Orders */
+        .work-orders-summary {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Colors */
+        .color-success { color: var(--success); }
+        .color-warning { color: var(--warning); }
+        .color-danger { color: var(--danger); }
+        .color-info { color: var(--info); }
+        .color-primary { color: var(--primary); }
+
+        .bg-success { background: var(--success); color: white; }
+        .bg-warning { background: var(--warning); color: white; }
+        .bg-danger { background: var(--danger); color: white; }
+        .bg-info { background: var(--info); color: white; }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 32px 24px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .kpis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .alerts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tabs Navigation */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray);
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            background: var(--light);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Page Sections */
+        .page-section {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Table */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 2px solid var(--border);
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--gray);
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: var(--light);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-danger { background: #fee2e2; color: #991b1b; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body>
+    <!-- ============================================================
+         PÁGINA DE LOGIN
+         ============================================================ -->
+    <div id="loginPage">
+        <div class="login-container">
+            <div class="login-header">
+                <h1><i class="fas fa-truck"></i> Fleet Maintenance</h1>
+                <p>Sistema de Mantenimiento Vehicular</p>
+            </div>
+
+            <div id="loginError" class="error-message"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="usuario@example.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Contraseña
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="••••••••"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span id="loginBtnText">Iniciar Sesión</span>
+                </button>
+            </form>
+
+            <div class="quick-login">
+                <p>Usuarios de prueba (password: testpass123):</p>
+                <div class="quick-login-grid">
+                    <button class="quick-login-btn" onclick="quickLogin('coordinador@test.com')">
+                        <i class="fas fa-user-tie"></i>
+                        <span><strong>Coordinador:</strong> coordinador@test.com</span>
+                    </button>
+                    <button class="quick-login-btn" onclick="quickLogin('conductor@test.com')">
+                        <i class="fas fa-truck"></i>
+                        <span><strong>Conductor:</strong> conductor@test.com</span>
+                    </button>
+                    <button class="quick-login-btn" onclick="quickLogin('tecnico@test.com')">
+                        <i class="fas fa-wrench"></i>
+                        <span><strong>Técnico:</strong> tecnico@test.com</span>
+                    </button>
+                    <button class="quick-login-btn" onclick="quickLogin('admin@test.com')">
+                        <i class="fas fa-cog"></i>
+                        <span><strong>Admin:</strong> admin@test.com</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         PÁGINA DE DASHBOARD
+         ============================================================ -->
+    <div id="dashboardPage" class="hidden">
+        <!-- Header -->
+        <div class="header">
+            <div class="container header-content">
+                <div class="header-title">
+                    <h1>
+                        <i class="fas fa-truck color-primary"></i>
+                        Fleet Maintenance System
+                    </h1>
+                    <p>Dashboard de Operaciones</p>
+                </div>
+                <div class="header-user">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Usuario</div>
+                        <div class="user-role" id="userRole">Rol</div>
+                    </div>
+                    <button class="btn btn-danger" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="container">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="showSection('overview')">
+                        <i class="fas fa-chart-line"></i> Vista General
+                    </button>
+                    <button class="tab" onclick="showSection('alerts')">
+                        <i class="fas fa-bell"></i> Alertas
+                    </button>
+                    <button class="tab" onclick="showSection('vehicles')">
+                        <i class="fas fa-truck"></i> Vehículos
+                    </button>
+                    <button class="tab" onclick="showSection('workorders')">
+                        <i class="fas fa-clipboard-list"></i> Órdenes de Trabajo
+                    </button>
+                </div>
+
+                <!-- VISTA GENERAL (Overview) -->
+                <div id="overviewSection" class="page-section">
+                    <!-- KPIs -->
+                    <div class="kpis-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label">Cumplimiento PM</div>
+                            <div class="kpi-value color-success">87.5%</div>
+                            <div class="kpi-target">Objetivo: 90%</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">Disponibilidad Flota</div>
+                            <div class="kpi-value color-info">90.0%</div>
+                            <div class="kpi-target">Objetivo: 95%</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">MTBF</div>
+                            <div class="kpi-value color-primary">45.2</div>
+                            <div class="kpi-target">días</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label">MTTR</div>
+                            <div class="kpi-value color-warning">6.5</div>
+                            <div class="kpi-target">horas (Objetivo: < 8h)</div>
+                        </div>
+                    </div>
+
+                    <!-- Fleet Status -->
+                    <div class="fleet-status">
+                        <h2 class="section-title">
+                            <i class="fas fa-truck-pickup"></i>
+                            Estado de la Flota
+                        </h2>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value color-primary">50</div>
+                                <div class="stat-label">Total Vehículos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value color-success">45</div>
+                                <div class="stat-label">Operativos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value color-danger">3</div>
+                                <div class="stat-label">No Operativos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value color-warning">2</div>
+                                <div class="stat-label">En Mantenimiento</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerts Grid -->
+                    <div class="alerts-grid">
+                        <div class="alert-panel">
+                            <div class="alert-icon">🔮</div>
+                            <h3 class="alert-title">Alertas Predictivas</h3>
+                            <p class="alert-subtitle">PM Próximos</p>
+                            <div class="alert-count color-info">8</div>
+                            <span class="alert-badge bg-info">Preventivas</span>
+                        </div>
+                        <div class="alert-panel">
+                            <div class="alert-icon">🚨</div>
+                            <h3 class="alert-title">Alertas Reactivas</h3>
+                            <p class="alert-subtitle">Defectos HOY</p>
+                            <div class="alert-count color-danger">5</div>
+                            <span class="alert-badge bg-danger">Urgentes</span>
+                        </div>
+                        <div class="alert-panel">
+                            <div class="alert-icon">📊</div>
+                            <h3 class="alert-title">Patrones Recurrentes</h3>
+                            <p class="alert-subtitle">Últimos 30 días</p>
+                            <div class="alert-count color-warning">2</div>
+                            <span class="alert-badge bg-warning">Seguimiento</span>
+                        </div>
+                    </div>
+
+                    <!-- Work Orders Summary -->
+                    <div class="work-orders-summary">
+                        <h2 class="section-title">
+                            <i class="fas fa-tasks"></i>
+                            Órdenes de Trabajo
+                        </h2>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value color-info">12</div>
+                                <div class="stat-label">Pendientes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value color-success">8</div>
+                                <div class="stat-label">En Progreso</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value color-danger">2</div>
+                                <div class="stat-label">Vencidas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN ALERTAS -->
+                <div id="alertsSection" class="page-section hidden">
+                    <div class="table-container">
+                        <h2 class="section-title">
+                            <i class="fas fa-bell"></i>
+                            Gestión de Alertas
+                        </h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Vehículo</th>
+                                    <th>Tipo</th>
+                                    <th>Mensaje</th>
+                                    <th>Criticidad</th>
+                                    <th>Estado</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alertsTableBody">
+                                <tr>
+                                    <td>#101</td>
+                                    <td><strong>ABC123</strong></td>
+                                    <td>PM Próxima</td>
+                                    <td>Vehículo ha alcanzado 90% del intervalo PM</td>
+                                    <td><span class="badge badge-warning">ALTA</span></td>
+                                    <td><span class="badge badge-info">ACTIVA</span></td>
+                                    <td>2025-11-13</td>
+                                </tr>
+                                <tr>
+                                    <td>#102</td>
+                                    <td><strong>XYZ789</strong></td>
+                                    <td>DVIR Crítico</td>
+                                    <td>Fuga de líquido de frenos detectada</td>
+                                    <td><span class="badge badge-danger">CRÍTICA</span></td>
+                                    <td><span class="badge badge-danger">ACTIVA</span></td>
+                                    <td>2025-11-14</td>
+                                </tr>
+                                <tr>
+                                    <td>#103</td>
+                                    <td><strong>DEF456</strong></td>
+                                    <td>Patrón Recurrente</td>
+                                    <td>Batería - Falla arranque (4 veces en 30 días)</td>
+                                    <td><span class="badge badge-warning">ALTA</span></td>
+                                    <td><span class="badge badge-info">EN INVESTIGACIÓN</span></td>
+                                    <td>2025-11-10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN VEHÍCULOS -->
+                <div id="vehiclesSection" class="page-section hidden">
+                    <!-- Grid de vehículos -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 24px;">
+                        <!-- Vehículo 1 -->
+                        <div class="card" style="cursor: pointer;" onclick="showVehicleDetail('TEST123')">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                <div>
+                                    <h3 style="font-size: 20px; margin-bottom: 4px;">
+                                        <i class="fas fa-truck color-primary"></i> TEST123
+                                    </h3>
+                                    <p style="color: var(--gray); font-size: 14px;">Toyota Hilux 4x4</p>
+                                </div>
+                                <span class="badge badge-success">OPERATIVO</span>
+                            </div>
+                            
+                            <!-- Health Score -->
+                            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+                                <div style="font-size: 12px; opacity: 0.9; margin-bottom: 4px;">Score de Salud</div>
+                                <div style="font-size: 42px; font-weight: bold;">85<span style="font-size: 24px;">/100</span></div>
+                                <div style="font-size: 13px; opacity: 0.9;">Riesgo: BAJO</div>
+                            </div>
+                            
+                            <!-- Stats -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Odómetro</div>
+                                    <div style="font-weight: 600;">50,000 km</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Próximo PM</div>
+                                    <div style="font-weight: 600;">4,700 km</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Último PM</div>
+                                    <div style="font-weight: 600;">40,000 km</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Tipo</div>
+                                    <div style="font-weight: 600;">PICKUP</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehículo 2 -->
+                        <div class="card" style="cursor: pointer;" onclick="showVehicleDetail('TURBO456')">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                                <div>
+                                    <h3 style="font-size: 20px; margin-bottom: 4px;">
+                                        <i class="fas fa-truck-monster color-primary"></i> TURBO456
+                                    </h3>
+                                    <p style="color: var(--gray); font-size: 14px;">Ford Ranger Turbo</p>
+                                </div>
+                                <span class="badge badge-success">OPERATIVO</span>
+                            </div>
+                            
+                            <!-- Health Score -->
+                            <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+                                <div style="font-size: 12px; opacity: 0.9; margin-bottom: 4px;">Score de Salud</div>
+                                <div style="font-size: 42px; font-weight: bold;">72<span style="font-size: 24px;">/100</span></div>
+                                <div style="font-size: 13px; opacity: 0.9;">Riesgo: MEDIO</div>
+                            </div>
+                            
+                            <!-- Stats -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Odómetro</div>
+                                    <div style="font-weight: 600;">75,000 km</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Próximo PM</div>
+                                    <div style="font-weight: 600; color: var(--warning);">2,500 km ⚠️</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Último PM</div>
+                                    <div style="font-weight: 600;">65,000 km</div>
+                                </div>
+                                <div>
+                                    <div style="color: var(--gray); margin-bottom: 4px;">Tipo</div>
+                                    <div style="font-weight: 600;">TURBO</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- SECCIÓN ÓRDENES DE TRABAJO -->
+                <div id="workordersSection" class="page-section hidden">
+                    <div class="table-container">
+                        <h2 class="section-title">
+                            <i class="fas fa-clipboard-list"></i>
+                            Órdenes de Trabajo
+                        </h2>
+                        <div style="margin-bottom: 16px;">
+                            <button class="btn btn-primary" onclick="showCreateWorkOrderModal()">
+                                <i class="fas fa-plus"></i> Crear Orden de Trabajo
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Vehículo</th>
+                                    <th>Tipo</th>
+                                    <th>Prioridad</th>
+                                    <th>Estado</th>
+                                    <th>Técnico</th>
+                                    <th>Progreso</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workOrdersTableBody">
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 40px; color: var(--gray);">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DVIR PARA CONDUCTOR -->
+                <div id="dvirSection" class="page-section hidden">
+                    <div class="card">
+                        <h2 class="section-title">
+                            <i class="fas fa-clipboard-check"></i>
+                            Inspección Diaria de Vehículo (DVIR)
+                        </h2>
+                        <p style="color: var(--gray); margin-bottom: 24px;">
+                            Realiza la inspección diaria de tu vehículo asignado. Completa todos los ítems del checklist.
+                        </p>
+                        
+                        <div id="dvirFormContainer">
+                            <div style="margin-bottom: 24px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Vehículo Asignado</label>
+                                <select id="dvirVehicleSelect" class="form-group input" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                                    <option value="">Cargando vehículos...</option>
+                                </select>
+                            </div>
+
+                            <div style="margin-bottom: 24px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Odómetro Actual</label>
+                                <input type="number" id="dvirOdometro" class="form-group input" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;" placeholder="Ej: 50000">
+                            </div>
+
+                            <div id="dvirChecklistContainer">
+                                <h3 style="margin-bottom: 16px;">Checklist de Inspección</h3>
+                                <div id="dvirChecklistItems">
+                                    <p style="color: var(--gray);">Cargando checklist...</p>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 24px; display: flex; gap: 12px;">
+                                <button class="btn btn-primary" onclick="submitDVIR()">
+                                    <i class="fas fa-check"></i> Enviar DVIR
+                                </button>
+                                <button class="btn btn-secondary" onclick="saveDVIRDraft()">
+                                    <i class="fas fa-save"></i> Guardar Borrador
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN MIS VEHÍCULOS PARA CONDUCTOR -->
+                <div id="myvehiclesSection" class="page-section hidden">
+                    <h2 class="section-title">
+                        <i class="fas fa-truck"></i>
+                        Mis Vehículos Asignados
+                    </h2>
+                    <div id="myVehiclesContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 24px;">
+                        <p style="color: var(--gray);">Cargando vehículos...</p>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN MIS OT PARA TÉCNICO -->
+                <div id="myworkordersSection" class="page-section hidden">
+                    <div class="table-container">
+                        <h2 class="section-title">
+                            <i class="fas fa-tasks"></i>
+                            Mis Órdenes de Trabajo Asignadas
+                        </h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Vehículo</th>
+                                    <th>Tipo</th>
+                                    <th>Prioridad</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Programada</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="myWorkOrdersTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; padding: 40px; color: var(--gray);">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN INVENTARIO PARA TÉCNICO -->
+                <div id="inventorySection" class="page-section hidden">
+                    <div class="card">
+                        <h2 class="section-title">
+                            <i class="fas fa-boxes"></i>
+                            Inventario de Repuestos
+                        </h2>
+                        <p style="color: var(--gray); margin-bottom: 24px;">
+                            Consulta el inventario de repuestos disponibles en el taller.
+                        </p>
+                        <div id="inventoryContainer">
+                            <p style="color: var(--gray);">Cargando inventario...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN USUARIOS PARA ADMIN -->
+                <div id="usersSection" class="page-section hidden">
+                    <div class="table-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                            <h2 class="section-title" style="margin: 0;">
+                                <i class="fas fa-users"></i>
+                                Gestión de Usuarios
+                            </h2>
+                            <button class="btn btn-primary" onclick="showCreateUserModal()">
+                                <i class="fas fa-plus"></i> Agregar Usuario
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray);">
+                                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN CONFIGURACIÓN PARA ADMIN -->
+                <div id="configSection" class="page-section hidden">
+                    <div class="card">
+                        <h2 class="section-title">
+                            <i class="fas fa-cog"></i>
+                            Configuración del Sistema
+                        </h2>
+                        <p style="color: var(--gray); margin-bottom: 24px;">
+                            Configuración de parámetros del sistema, checklists PM, y más.
+                        </p>
+                        <div id="configContainer">
+                            <p style="color: var(--gray);">Funcionalidad en desarrollo...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         JAVASCRIPT
+         ============================================================ -->
+    <script>
+        // Configuración
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        // Estado global
+        let currentUser = null;
+        let currentToken = null;
+        let currentSection = 'overview';
+
+        // ============================================================
+        // INICIALIZACIÓN
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            setupLoginForm();
+        });
+
+        function checkAuth() {
+            const token = localStorage.getItem('access_token');
+            const userStr = localStorage.getItem('user');
+            
+            if (token && userStr) {
+                try {
+                    currentToken = token;
+                    currentUser = JSON.parse(userStr);
+                    showDashboard();
+                } catch (e) {
+                    logout();
+                }
+            } else {
+                showLogin();
+            }
+        }
+
+        // ============================================================
+        // LOGIN
+        // ============================================================
+        function setupLoginForm() {
+            const form = document.getElementById('loginForm');
+            form.addEventListener('submit', handleLogin);
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            const loginBtn = document.getElementById('loginBtn');
+            const loginBtnText = document.getElementById('loginBtnText');
+            
+            // Reset error
+            errorDiv.classList.remove('show');
+            
+            // Loading state
+            loginBtn.disabled = true;
+            loginBtnText.innerHTML = '<span class="loading"></span> Iniciando...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.detail || 'Error al iniciar sesión');
+                }
+                
+                const data = await response.json();
+                
+                // Guardar token y usuario
+                localStorage.setItem('access_token', data.access_token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                currentToken = data.access_token;
+                currentUser = data.user;
+                
+                // Mostrar dashboard
+                showDashboard();
+                
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.classList.add('show');
+                loginBtn.disabled = false;
+                loginBtnText.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
+            }
+        }
+
+        function quickLogin(email) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = 'testpass123';
+        }
+
+        // ============================================================
+        // NAVEGACIÓN
+        // ============================================================
+        function showLogin() {
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.nombre;
+                document.getElementById('userRole').textContent = currentUser.rol;
+                
+                // Configurar navegación según rol
+                setupRoleBasedNavigation();
+                
+                // Cargar datos según rol
+                loadRoleSpecificData();
+            }
+            
+            // Mostrar sección inicial según rol
+            const initialSection = getInitialSectionForRole();
+            showSection(initialSection);
+        }
+
+        // ============================================================
+        // CONTROL DE ACCESO POR ROLES (RBAC)
+        // ============================================================
+        function setupRoleBasedNavigation() {
+            const role = currentUser?.rol;
+            const tabsContainer = document.querySelector('.tabs');
+            
+            // Ocultar todos los tabs primero
+            const allTabs = tabsContainer.querySelectorAll('.tab');
+            allTabs.forEach(tab => tab.style.display = 'none');
+            
+            // Mostrar tabs según rol
+            if (role === 'CONDUCTOR') {
+                showTabs(['dvir', 'myvehicles']);
+            } else if (role === 'COORDINADOR') {
+                showTabs(['overview', 'alerts', 'vehicles', 'workorders']);
+            } else if (role === 'TECNICO') {
+                showTabs(['myworkorders', 'inventory']);
+            } else if (role === 'ADMIN') {
+                showTabs(['overview', 'vehicles', 'users', 'config']);
+            }
+        }
+
+        function showTabs(allowedTabs) {
+            const tabsContainer = document.querySelector('.tabs');
+            const tabMap = {
+                'overview': { icon: 'fa-chart-line', text: 'Vista General' },
+                'alerts': { icon: 'fa-bell', text: 'Alertas' },
+                'vehicles': { icon: 'fa-truck', text: 'Vehículos' },
+                'workorders': { icon: 'fa-clipboard-list', text: 'Órdenes de Trabajo' },
+                'dvir': { icon: 'fa-clipboard-check', text: 'DVIR' },
+                'myvehicles': { icon: 'fa-truck', text: 'Mis Vehículos' },
+                'myworkorders': { icon: 'fa-tasks', text: 'Mis OT' },
+                'inventory': { icon: 'fa-boxes', text: 'Inventario' },
+                'users': { icon: 'fa-users', text: 'Usuarios' },
+                'config': { icon: 'fa-cog', text: 'Configuración' }
+            };
+            
+            // Limpiar tabs existentes
+            tabsContainer.innerHTML = '';
+            
+            // Crear tabs permitidos
+            allowedTabs.forEach(tabKey => {
+                const tabInfo = tabMap[tabKey];
+                if (tabInfo) {
+                    const tab = document.createElement('button');
+                    tab.className = 'tab';
+                    tab.setAttribute('data-section', tabKey);
+                    tab.onclick = () => showSection(tabKey);
+                    tab.innerHTML = `<i class="fas ${tabInfo.icon}"></i> ${tabInfo.text}`;
+                    tabsContainer.appendChild(tab);
+                }
+            });
+        }
+
+        function getInitialSectionForRole() {
+            const role = currentUser?.rol;
+            if (role === 'CONDUCTOR') return 'dvir';
+            if (role === 'COORDINADOR') return 'overview';
+            if (role === 'TECNICO') return 'myworkorders';
+            if (role === 'ADMIN') return 'overview';
+            return 'overview';
+        }
+
+        function loadRoleSpecificData() {
+            const role = currentUser?.rol;
+            if (role === 'CONDUCTOR') {
+                loadConductorData();
+            } else if (role === 'COORDINADOR') {
+                loadCoordinadorData();
+            } else if (role === 'TECNICO') {
+                loadTecnicoData();
+            } else if (role === 'ADMIN') {
+                loadAdminData();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            currentToken = null;
+            currentUser = null;
+            showLogin();
+        }
+
+        function showSection(section) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.page-section').forEach(el => {
+                el.classList.add('hidden');
+            });
+            
+            // Desactivar todos los tabs
+            document.querySelectorAll('.tab').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Mostrar sección seleccionada
+            const sectionMap = {
+                'overview': 'overviewSection',
+                'alerts': 'alertsSection',
+                'vehicles': 'vehiclesSection',
+                'workorders': 'workordersSection',
+                'dvir': 'dvirSection',
+                'myvehicles': 'myvehiclesSection',
+                'myworkorders': 'myworkordersSection',
+                'inventory': 'inventorySection',
+                'users': 'usersSection',
+                'config': 'configSection'
+            };
+            
+            const sectionId = sectionMap[section];
+            if (sectionId) {
+                const sectionEl = document.getElementById(sectionId);
+                if (sectionEl) {
+                    sectionEl.classList.remove('hidden');
+                } else {
+                    console.warn(`Sección ${sectionId} no existe`);
+                }
+            }
+            
+            // Activar tab
+            const clickedTab = event?.target?.closest('.tab');
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            } else {
+                // Activar tab por data-section
+                document.querySelectorAll('.tab').forEach(tab => {
+                    if (tab.getAttribute('data-section') === section) {
+                        tab.classList.add('active');
+                    }
+                });
+            }
+            
+            currentSection = section;
+            
+            // Recargar datos de la sección si es necesario
+            refreshSectionData(section);
+        }
+
+        function refreshSectionData(section) {
+            const role = currentUser?.rol;
+            if (section === 'dvir' && role === 'CONDUCTOR') {
+                loadConductorData();
+            } else if (section === 'vehicles' && role === 'ADMIN') {
+                loadVehiclesForAdmin();
+            } else if (section === 'workorders' && role === 'COORDINADOR') {
+                loadWorkOrdersForCoordinador();
+            } else if (section === 'myworkorders' && role === 'TECNICO') {
+                loadWorkOrdersForTecnico();
+            }
+        }
+
+        // ============================================================
+        // API HELPERS
+        // ============================================================
+        async function apiCall(endpoint, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+            
+            if (currentToken) {
+                headers['Authorization'] = `Bearer ${currentToken}`;
+            }
+            
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers
+            });
+            
+            if (!response.ok) {
+                if (response.status === 401) {
+                    logout();
+                }
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            return response.json();
+        }
+
+        // ============================================================
+        // FUNCIONES DE CARGA DE DATOS POR ROL
+        // ============================================================
+        async function loadConductorData() {
+            try {
+                // Cargar vehículos asignados
+                const vehicles = await apiCall('/api/v1/conductor/vehiculos');
+                const select = document.getElementById('dvirVehicleSelect');
+                if (select) {
+                    select.innerHTML = '<option value="">Selecciona un vehículo</option>';
+                    vehicles.forEach(v => {
+                        const option = document.createElement('option');
+                        option.value = v.id;
+                        option.textContent = `${v.placa} - ${v.marca} ${v.modelo}`;
+                        select.appendChild(option);
+                    });
+                    
+                    // Agregar listener para cargar checklist cuando se seleccione un vehículo
+                    select.addEventListener('change', (e) => {
+                        if (e.target.value) {
+                            loadDVIRChecklist(e.target.value);
+                        } else {
+                            document.getElementById('dvirChecklistItems').innerHTML = '<p style="color: var(--gray);">Selecciona un vehículo para ver el checklist.</p>';
+                        }
+                    });
+                }
+                
+                // Cargar vehículos en sección "Mis Vehículos"
+                loadMyVehicles(vehicles);
+                
+                // Cargar checklist si hay vehículo seleccionado
+                if (select && select.value) {
+                    loadDVIRChecklist(select.value);
+                }
+            } catch (error) {
+                console.error('Error cargando datos de conductor:', error);
+                showNotification('Error al cargar datos. Verifica que el backend esté corriendo.', 'error');
+            }
+        }
+
+        async function loadCoordinadorData() {
+            try {
+                // Cargar alertas
+                const alerts = await apiCall('/api/v1/coordinador/alertas');
+                renderAlerts(alerts);
+                
+                // Cargar vehículos
+                const vehicles = await apiCall('/api/v1/coordinador/vehiculos');
+                renderVehicles(vehicles);
+                
+                // Cargar órdenes de trabajo
+                loadWorkOrdersForCoordinador();
+            } catch (error) {
+                console.error('Error cargando datos de coordinador:', error);
+                // Usar datos mock si el backend no responde
+                showNotification('Usando datos de demostración. El backend puede no estar disponible.', 'warning');
+            }
+        }
+
+        async function loadTecnicoData() {
+            try {
+                const workOrders = await apiCall('/api/v1/tecnico/ordenes');
+                renderMyWorkOrders(workOrders);
+            } catch (error) {
+                console.error('Error cargando datos de técnico:', error);
+                showNotification('Error al cargar órdenes de trabajo.', 'error');
+            }
+        }
+
+        async function loadAdminData() {
+            try {
+                loadVehiclesForAdmin();
+                loadUsersForAdmin();
+            } catch (error) {
+                console.error('Error cargando datos de admin:', error);
+                showNotification('Error al cargar datos.', 'error');
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES ESPECÍFICAS CONDUCTOR
+        // ============================================================
+        async function loadMyVehicles(vehicles) {
+            const container = document.getElementById('myVehiclesContainer');
+            if (!container) return;
+            
+            if (!vehicles || vehicles.length === 0) {
+                container.innerHTML = '<p style="color: var(--gray);">No tienes vehículos asignados.</p>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            for (const vehicle of vehicles) {
+                try {
+                    const salud = await apiCall(`/api/v1/conductor/vehiculos/${vehicle.id}/salud`);
+                    const card = createVehicleCard(vehicle, salud);
+                    container.appendChild(card);
+                } catch (error) {
+                    const card = createVehicleCard(vehicle, null);
+                    container.appendChild(card);
+                }
+            }
+        }
+
+        function createVehicleCard(vehicle, salud) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.cursor = 'pointer';
+            
+            const score = salud?.score || 0;
+            const scoreColor = score >= 80 ? 'success' : score >= 60 ? 'warning' : 'danger';
+            
+            card.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <h3 style="font-size: 20px; margin-bottom: 4px;">
+                            <i class="fas fa-truck color-primary"></i> ${vehicle.placa}
+                        </h3>
+                        <p style="color: var(--gray); font-size: 14px;">${vehicle.marca || ''} ${vehicle.modelo || ''}</p>
+                    </div>
+                    <span class="badge badge-${vehicle.estado_operativo === 'OPERATIVO' ? 'success' : 'danger'}">${vehicle.estado_operativo}</span>
+                </div>
+                ${salud ? `
+                <div style="background: linear-gradient(135deg, var(--${scoreColor}) 0%, var(--${scoreColor === 'success' ? 'success' : scoreColor === 'warning' ? 'warning' : 'danger'}) 100%); color: white; padding: 20px; border-radius: 8px; margin-bottom: 16px;">
+                    <div style="font-size: 12px; opacity: 0.9; margin-bottom: 4px;">Score de Salud</div>
+                    <div style="font-size: 42px; font-weight: bold;">${score}<span style="font-size: 24px;">/100</span></div>
+                </div>
+                ` : ''}
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                    <div>
+                        <div style="color: var(--gray); margin-bottom: 4px;">Odómetro</div>
+                        <div style="font-weight: 600;">${vehicle.odometro_actual || 0} km</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--gray); margin-bottom: 4px;">Tipo</div>
+                        <div style="font-weight: 600;">${vehicle.tipo || 'N/A'}</div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        async function loadDVIRChecklist(vehicleId) {
+            // Por ahora usamos un checklist estándar
+            const checklistItems = [
+                { id: 1, categoria: 'Frenos', item: 'Líquido de frenos', tipo: 'OK' },
+                { id: 2, categoria: 'Frenos', item: 'Pastillas de freno', tipo: 'OK' },
+                { id: 3, categoria: 'Motor', item: 'Nivel de aceite', tipo: 'OK' },
+                { id: 4, categoria: 'Motor', item: 'Filtro de aire', tipo: 'OK' },
+                { id: 5, categoria: 'Luces', item: 'Luces delanteras', tipo: 'OK' },
+                { id: 6, categoria: 'Luces', item: 'Luces traseras', tipo: 'OK' },
+                { id: 7, categoria: 'Neumáticos', item: 'Presión de neumáticos', tipo: 'OK' },
+                { id: 8, categoria: 'Neumáticos', item: 'Estado de neumáticos', tipo: 'OK' },
+            ];
+            
+            const container = document.getElementById('dvirChecklistItems');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            checklistItems.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.style.cssText = 'padding: 16px; border: 2px solid var(--border); border-radius: 8px; margin-bottom: 12px;';
+                itemDiv.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--gray); margin-bottom: 4px;">${item.categoria}</div>
+                            <div style="font-weight: 600;">${item.item}</div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn ${item.tipo === 'OK' ? 'btn-primary' : 'btn-secondary'}" 
+                                    onclick="setDVIRItemStatus(${item.id}, 'OK')" 
+                                    style="padding: 8px 16px; font-size: 12px;">
+                                OK
+                            </button>
+                            <button class="btn ${item.tipo === 'ALERTA' ? 'btn-warning' : 'btn-secondary'}" 
+                                    onclick="setDVIRItemStatus(${item.id}, 'ALERTA')" 
+                                    style="padding: 8px 16px; font-size: 12px; background: var(--warning); color: white;">
+                                ALERTA
+                            </button>
+                            <button class="btn ${item.tipo === 'CRITICO' ? 'btn-danger' : 'btn-secondary'}" 
+                                    onclick="setDVIRItemStatus(${item.id}, 'CRITICO')" 
+                                    style="padding: 8px 16px; font-size: 12px;">
+                                CRÍTICO
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        let dvirItemsStatus = {};
+        function setDVIRItemStatus(itemId, status) {
+            dvirItemsStatus[itemId] = status;
+            // Actualizar visualmente el botón activo
+            event.target.parentElement.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('btn-primary', 'btn-warning', 'btn-danger');
+                btn.classList.add('btn-secondary');
+            });
+            event.target.classList.remove('btn-secondary');
+            if (status === 'OK') event.target.classList.add('btn-primary');
+            if (status === 'ALERTA') event.target.classList.add('btn-warning');
+            if (status === 'CRITICO') event.target.classList.add('btn-danger');
+        }
+
+        async function submitDVIR() {
+            const vehicleId = document.getElementById('dvirVehicleSelect').value;
+            const odometro = document.getElementById('dvirOdometro').value;
+            
+            if (!vehicleId || !odometro) {
+                showNotification('Por favor completa todos los campos requeridos.', 'warning');
+                return;
+            }
+            
+            try {
+                const items = Object.keys(dvirItemsStatus).map(id => ({
+                    checklist_item_id: parseInt(id),
+                    estado: dvirItemsStatus[id]
+                }));
+                
+                const dvirData = {
+                    vehiculo_id: parseInt(vehicleId),
+                    odometro: parseInt(odometro),
+                    items: items,
+                    offline: false
+                };
+                
+                const result = await apiCall('/api/v1/conductor/dvir', {
+                    method: 'POST',
+                    body: JSON.stringify(dvirData)
+                });
+                
+                showNotification('DVIR enviado correctamente.', 'success');
+                dvirItemsStatus = {};
+                document.getElementById('dvirOdometro').value = '';
+            } catch (error) {
+                showNotification('Error al enviar DVIR: ' + error.message, 'error');
+            }
+        }
+
+        function saveDVIRDraft() {
+            const draft = {
+                vehicleId: document.getElementById('dvirVehicleSelect').value,
+                odometro: document.getElementById('dvirOdometro').value,
+                items: dvirItemsStatus
+            };
+            localStorage.setItem('dvir_draft', JSON.stringify(draft));
+            showNotification('Borrador guardado localmente.', 'info');
+        }
+
+        // ============================================================
+        // FUNCIONES ESPECÍFICAS ADMIN
+        // ============================================================
+        async function loadVehiclesForAdmin() {
+            try {
+                const vehicles = await apiCall('/api/v1/admin/vehiculos');
+                renderVehiclesForAdmin(vehicles);
+            } catch (error) {
+                console.error('Error cargando vehículos:', error);
+                // Mostrar vehículos mock
+                renderVehiclesForAdmin([
+                    { id: 1, placa: 'TEST123', marca: 'Toyota', modelo: 'Hilux 4x4', tipo: 'PICKUP', estado_operativo: 'OPERATIVO', odometro_actual: 50000 },
+                    { id: 2, placa: 'TURBO456', marca: 'Ford', modelo: 'Ranger Turbo', tipo: 'TURBO', estado_operativo: 'OPERATIVO', odometro_actual: 75000 }
+                ]);
+            }
+        }
+
+        function renderVehiclesForAdmin(vehicles) {
+            const container = document.getElementById('vehiclesSection');
+            if (!container) return;
+            
+            const grid = container.querySelector('div[style*="grid"]') || document.createElement('div');
+            grid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 24px;';
+            grid.innerHTML = '';
+            
+            vehicles.forEach(vehicle => {
+                const card = createVehicleCard(vehicle, null);
+                grid.appendChild(card);
+            });
+            
+            // Agregar botón de agregar vehículo
+            const addCard = document.createElement('div');
+            addCard.className = 'card';
+            addCard.style.cssText = 'border: 2px dashed var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; min-height: 300px;';
+            addCard.onclick = showAddVehicleModal;
+            addCard.innerHTML = `
+                <div style="text-align: center; color: var(--gray);">
+                    <i class="fas fa-plus-circle" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+                    <div style="font-size: 16px; font-weight: 600;">Agregar Vehículo</div>
+                </div>
+            `;
+            grid.appendChild(addCard);
+            
+            if (!container.querySelector('div[style*="grid"]')) {
+                container.appendChild(grid);
+            }
+        }
+
+        function showAddVehicleModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
+            modal.innerHTML = `
+                <div class="card" style="max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto;">
+                    <h2 style="margin-bottom: 24px;">Agregar Vehículo</h2>
+                    <form id="addVehicleForm">
+                        <div class="form-group">
+                            <label>Placa *</label>
+                            <input type="text" id="newVehiclePlaca" required style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Marca</label>
+                            <input type="text" id="newVehicleMarca" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Modelo</label>
+                            <input type="text" id="newVehicleModelo" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo *</label>
+                            <select id="newVehicleTipo" required style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                                <option value="PICKUP">PICKUP</option>
+                                <option value="TURBO">TURBO</option>
+                                <option value="CAMION">CAMION</option>
+                                <option value="OTRO">OTRO</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Año</label>
+                            <input type="number" id="newVehicleAnio" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                        <div class="form-group">
+                            <label>VIN</label>
+                            <input type="text" id="newVehicleVin" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 8px;">
+                        </div>
+                        <div style="display: flex; gap: 12px; margin-top: 24px;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1;">Agregar</button>
+                            <button type="button" class="btn btn-secondary" onclick="this.closest('div[style*=\"position: fixed\"]').remove()" style="flex: 1;">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            modal.querySelector('form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                try {
+                    const vehicleData = {
+                        placa: document.getElementById('newVehiclePlaca').value,
+                        marca: document.getElementById('newVehicleMarca').value,
+                        modelo: document.getElementById('newVehicleModelo').value,
+                        tipo: document.getElementById('newVehicleTipo').value,
+                        año: document.getElementById('newVehicleAnio').value ? parseInt(document.getElementById('newVehicleAnio').value) : null,
+                        vin: document.getElementById('newVehicleVin').value || null
+                    };
+                    
+                    await apiCall('/api/v1/admin/vehiculos', {
+                        method: 'POST',
+                        body: JSON.stringify(vehicleData)
+                    });
+                    
+                    showNotification('Vehículo agregado correctamente.', 'success');
+                    modal.remove();
+                    loadVehiclesForAdmin();
+                } catch (error) {
+                    showNotification('Error al agregar vehículo: ' + error.message, 'error');
+                }
+            });
+        }
+
+        async function loadUsersForAdmin() {
+            try {
+                const users = await apiCall('/api/v1/admin/usuarios');
+                renderUsers(users);
+            } catch (error) {
+                console.error('Error cargando usuarios:', error);
+                showNotification('Error al cargar usuarios. El endpoint puede no estar disponible.', 'warning');
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersTableBody');
+            if (!tbody) return;
+            
+            if (!users || users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;">No hay usuarios registrados.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.id}</td>
+                    <td>${user.nombre}</td>
+                    <td>${user.email}</td>
+                    <td><span class="badge badge-info">${user.rol}</span></td>
+                    <td><span class="badge badge-${user.estado === 'ACTIVO' ? 'success' : 'danger'}">${user.estado}</span></td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="editUser(${user.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showCreateUserModal() {
+            showNotification('Funcionalidad de crear usuarios próximamente disponible.', 'info');
+        }
+
+        function editUser(userId) {
+            showNotification('Funcionalidad de editar usuarios próximamente disponible.', 'info');
+        }
+
+        // ============================================================
+        // FUNCIONES ESPECÍFICAS COORDINADOR
+        // ============================================================
+        async function loadWorkOrdersForCoordinador() {
+            try {
+                const workOrders = await apiCall('/api/v1/coordinador/ordenes');
+                renderWorkOrders(workOrders);
+            } catch (error) {
+                console.error('Error cargando órdenes de trabajo:', error);
+                // Mostrar datos mock
+                renderWorkOrders([
+                    { id: 891, vehiculo: { placa: 'ABC123' }, tipo: 'Preventivo', prioridad: 'MEDIA', estado: 'EN_PROGRESO', tecnico: { nombre: 'Carlos Méndez' }, progreso: 40 },
+                    { id: 892, vehiculo: { placa: 'XYZ789' }, tipo: 'Correctivo', prioridad: 'URGENTE', estado: 'PENDIENTE', tecnico: null, progreso: 0 }
+                ]);
+            }
+        }
+
+        function renderWorkOrders(workOrders) {
+            const tbody = document.getElementById('workOrdersTableBody');
+            if (!tbody) return;
+            
+            if (!workOrders || workOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;">No hay órdenes de trabajo.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = workOrders.map(ot => `
+                <tr>
+                    <td><strong>#${ot.id}</strong></td>
+                    <td>${ot.vehiculo?.placa || 'N/A'}</td>
+                    <td>${ot.tipo}</td>
+                    <td><span class="badge badge-${ot.prioridad === 'URGENTE' ? 'danger' : ot.prioridad === 'MEDIA' ? 'warning' : 'info'}">${ot.prioridad}</span></td>
+                    <td><span class="badge badge-${ot.estado === 'EN_PROGRESO' ? 'success' : 'warning'}">${ot.estado}</span></td>
+                    <td>${ot.tecnico?.nombre || '-'}</td>
+                    <td>${ot.progreso || 0}%</td>
+                    <td>
+                        <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="viewWorkOrder(${ot.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showCreateWorkOrderModal() {
+            showNotification('Funcionalidad de crear órdenes de trabajo próximamente disponible.', 'info');
+        }
+
+        function viewWorkOrder(otId) {
+            showNotification(`Ver detalle de OT #${otId} - Funcionalidad próximamente disponible.`, 'info');
+        }
+
+        // ============================================================
+        // FUNCIONES ESPECÍFICAS TÉCNICO
+        // ============================================================
+        async function loadWorkOrdersForTecnico() {
+            try {
+                const workOrders = await apiCall('/api/v1/tecnico/ordenes');
+                renderMyWorkOrders(workOrders);
+            } catch (error) {
+                console.error('Error cargando órdenes de trabajo:', error);
+                showNotification('Error al cargar órdenes de trabajo.', 'error');
+            }
+        }
+
+        function renderMyWorkOrders(workOrders) {
+            const tbody = document.getElementById('myWorkOrdersTableBody');
+            if (!tbody) return;
+            
+            if (!workOrders || workOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No tienes órdenes de trabajo asignadas.</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = workOrders.map(ot => `
+                <tr>
+                    <td><strong>#${ot.id}</strong></td>
+                    <td>${ot.vehiculo?.placa || 'N/A'}</td>
+                    <td>${ot.tipo}</td>
+                    <td><span class="badge badge-${ot.prioridad === 'URGENTE' ? 'danger' : 'warning'}">${ot.prioridad}</span></td>
+                    <td><span class="badge badge-${ot.estado === 'EN_PROGRESO' ? 'success' : 'warning'}">${ot.estado}</span></td>
+                    <td>${ot.fecha_programada || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="startWorkOrder(${ot.id})">
+                            <i class="fas fa-play"></i> Iniciar
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function startWorkOrder(otId) {
+            showNotification(`Iniciar OT #${otId} - Funcionalidad próximamente disponible.`, 'info');
+        }
+
+        // ============================================================
+        // FUNCIONES DE VEHÍCULOS
+        // ============================================================
+        function showVehicleDetail(placa) {
+            alert(`Detalle del vehículo ${placa}\n\nEsta funcionalidad se expandirá en la siguiente versión con:\n\n✅ Historial completo de DVIR\n✅ Todas las OT realizadas\n✅ Gráficos de salud y uso\n✅ Eventos de conducción\n✅ Alertas asociadas`);
+        }
+
+        function renderVehicles(vehicles) {
+            // Implementación para coordinador
+            const container = document.getElementById('vehiclesSection');
+            if (container) {
+                renderVehiclesForAdmin(vehicles);
+            }
+        }
+
+        function renderAlerts(alerts) {
+            // Implementación para coordinador
+            const tbody = document.getElementById('alertsTableBody');
+            if (tbody && alerts) {
+                tbody.innerHTML = alerts.map(alert => `
+                    <tr>
+                        <td>#${alert.id}</td>
+                        <td><strong>${alert.vehiculo?.placa || 'N/A'}</strong></td>
+                        <td>${alert.tipo}</td>
+                        <td>${alert.mensaje}</td>
+                        <td><span class="badge badge-${alert.criticidad === 'CRITICA' ? 'danger' : 'warning'}">${alert.criticidad}</span></td>
+                        <td><span class="badge badge-${alert.estado === 'ACTIVA' ? 'danger' : 'info'}">${alert.estado}</span></td>
+                        <td>${alert.fecha || 'N/A'}</td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // ============================================================
+        // NOTIFICACIONES
+        // ============================================================
+        function showNotification(message, type = 'info') {
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                z-index: 1000;
+                animation: slideInRight 0.3s ease;
+                max-width: 400px;
+            `;
+
+            const colors = {
+                'success': '#10b981',
+                'error': '#ef4444',
+                'warning': '#f59e0b',
+                'info': '#3b82f6'
+            };
+
+            const icons = {
+                'success': 'fa-check-circle',
+                'error': 'fa-exclamation-circle',
+                'warning': 'fa-exclamation-triangle',
+                'info': 'fa-info-circle'
+            };
+
+            notification.innerHTML = `
+                <i class="fas ${icons[type]}" style="font-size: 24px; color: ${colors[type]};"></i>
+                <div style="flex: 1;">${message}</div>
+                <i class="fas fa-times" style="cursor: pointer; opacity: 0.5;" onclick="this.parentElement.remove()"></i>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Auto-remove después de 5 segundos
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Animaciones para notificaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,87 @@
+═══════════════════════════════════════════════════════════════
+  CÓMO EJECUTAR DESDE POWERSHELL (VER ERRORES)
+═══════════════════════════════════════════════════════════════
+
+PASO 1: Abrir PowerShell
+───────────────────────────────────────────────────────────────
+
+Presiona: Windows + X
+Selecciona: "Windows PowerShell" o "Terminal"
+
+PASO 2: Navegar a la carpeta correcta
+───────────────────────────────────────────────────────────────
+
+Copia y pega EXACTAMENTE este comando:
+
+cd "C:\Users\User-PC\Desktop\software engineering\app\man"
+
+Presiona Enter
+
+PASO 3: Verificar que estás en la carpeta correcta
+───────────────────────────────────────────────────────────────
+
+Ejecuta:
+
+dir *.bat
+
+Deberías ver una lista de archivos .bat incluyendo ABRIR_APP.bat
+
+PASO 4: Ejecutar el script
+───────────────────────────────────────────────────────────────
+
+Opción A (Recomendada - con pausa para ver errores):
+
+.\ABRIR_APP_CON_PAUSA.bat
+
+Opción B (normal):
+
+.\ABRIR_APP.bat
+
+Opción C (para diagnosticar):
+
+.\DIAGNOSTICO_COMPLETO.bat
+
+PASO 5: Si sigue sin funcionar
+───────────────────────────────────────────────────────────────
+
+Ejecuta línea por línea:
+
+cd "C:\Users\User-PC\Desktop\software engineering\app\man"
+ls ABRIR_APP.bat
+
+Si dice "no se encuentra", estás en la carpeta equivocada.
+
+═══════════════════════════════════════════════════════════════
+  COMANDOS COMPLETOS (COPY-PASTE)
+═══════════════════════════════════════════════════════════════
+
+# Navegar y ejecutar versión con pausa
+cd "C:\Users\User-PC\Desktop\software engineering\app\man"
+.\ABRIR_APP_CON_PAUSA.bat
+
+# O navegar y ejecutar diagnóstico
+cd "C:\Users\User-PC\Desktop\software engineering\app\man"
+.\DIAGNOSTICO_COMPLETO.bat
+
+# O navegar y arreglar Docker primero
+cd "C:\Users\User-PC\Desktop\software engineering\app\man"
+.\ARREGLAR_DOCKER_Y_ABRIR.bat
+
+═══════════════════════════════════════════════════════════════
+  NOTA IMPORTANTE
+═══════════════════════════════════════════════════════════════
+
+Si estás en la carpeta "man\man" (doble man), tienes que subir:
+
+cd ..
+
+Y luego ejecutar el script.
+
+La ruta correcta es:
+C:\Users\User-PC\Desktop\software engineering\app\man
+
+NO:
+C:\Users\User-PC\Desktop\software engineering\app\man\man
+
+═══════════════════════════════════════════════════════════════
+
