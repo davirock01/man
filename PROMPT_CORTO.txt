@@ -1,0 +1,120 @@
+Hola, necesito tu ayuda para configurar un proyecto colaborativo de mantenimiento de flota vehicular.
+
+# CONTEXTO DEL PROYECTO
+
+Soy parte de un equipo internacional trabajando en un sistema de gestión de mantenimiento vehicular. El proyecto ya está en GitHub y necesito configurar mi entorno local para colaborar efectivamente.
+
+## INFORMACIÓN DEL REPOSITORIO
+
+**URL del Repositorio**: https://github.com/davirock01/man
+
+**Stack Tecnológico**:
+- Backend: FastAPI (Python), PostgreSQL, Celery, Redis
+- Frontend Web: React 18 + TypeScript, Vite, Tailwind CSS
+- Mobile App: React Native + Expo
+
+**Estructura del Proyecto**:
+```
+man/
+├── backend/              # API FastAPI
+├── frontend-web/         # Aplicación web React
+├── mobile-app/          # App móvil React Native
+├── docs/                # Documentación
+└── [otros archivos de config y scripts]
+```
+
+## LO QUE NECESITO QUE ME AYUDES A HACER
+
+### 1. CONFIGURACIÓN INICIAL
+
+Por favor, ayúdame a:
+
+a) **Clonar el repositorio** en mi computadora de forma correcta
+b) **Verificar requisitos del sistema** (Python, Node.js, Docker, PostgreSQL, etc.)
+c) **Instalar todas las dependencias** necesarias para:
+   - Backend (Python/FastAPI)
+   - Frontend Web (React/TypeScript)
+   - Mobile App (React Native/Expo)
+d) **Configurar variables de entorno** (.env files)
+e) **Configurar la base de datos** (PostgreSQL)
+f) **Iniciar todos los servicios** y verificar que funcionen
+
+### 2. FLUJO DE TRABAJO GIT
+
+Enséñame y configura:
+
+a) **Comandos diarios** que debo usar para:
+   - Descargar cambios del equipo (antes de trabajar)
+   - Subir mis cambios (después de trabajar)
+   - Ver el estado de mis cambios
+   - Hacer commits descriptivos
+
+b) **Manejo de conflictos**: Qué hacer si hay conflictos de merge
+
+c) **Mejores prácticas**: Convenciones de commits, branches, etc.
+
+### 3. DESARROLLO LOCAL
+
+Ayúdame a:
+
+a) **Ejecutar el backend** localmente y probar los endpoints
+b) **Ejecutar el frontend web** y acceder a la interfaz
+c) **Ejecutar la app móvil** en el emulador o mi dispositivo
+d) **Configurar hot-reload** para desarrollo eficiente
+e) **Acceder a la documentación de la API** (Swagger/OpenAPI)
+
+### 4. TESTING Y DEBUGGING
+
+Configura:
+
+a) **Cómo ejecutar tests** (backend y frontend)
+b) **Cómo ver logs** de los servicios
+c) **Herramientas de debugging** recomendadas
+d) **Linters y formatters** para mantener calidad de código
+
+### 5. BASE DE DATOS
+
+Ayúdame a:
+
+a) **Conectar a PostgreSQL** localmente
+b) **Ejecutar migraciones** (Alembic)
+c) **Seed data** si es necesario para desarrollo
+d) **Ver y modificar datos** de prueba
+
+## REQUISITOS IMPORTANTES
+
+- **Acceso Total**: Necesito poder leer, escribir, modificar y eliminar archivos
+- **Sincronización en Tiempo Real**: Los cambios entre el equipo deben verse rápidamente
+- **Offline First** (Mobile): La app móvil debe funcionar sin conexión
+- **Documentación**: Explícame cada paso que hagamos
+
+## CREDENCIALES Y CONFIGURACIÓN SENSIBLE
+
+**NOTA IMPORTANTE**: 
+- Las API keys y credenciales NO están en el repositorio (protegidas por .gitignore)
+- Solicitaré las credenciales al administrador del proyecto por canal seguro
+- Por favor, indícame QUÉ credenciales necesito y DÓNDE configurarlas
+
+## MI SISTEMA OPERATIVO
+
+[COMPLETAR AQUÍ TU SISTEMA]:
+- Sistema Operativo: Windows 11 / macOS / Linux
+- Python instalado: Sí / No
+- Node.js instalado: Sí / No
+- Docker instalado: Sí / No
+
+## LO QUE ESPERO DE TI
+
+Por favor:
+
+1. **Guíame paso a paso** con comandos exactos que pueda copiar y pegar
+2. **Crea scripts** si es necesario para automatizar tareas comunes
+3. **Explica qué hace cada comando** para que aprenda
+4. **Anticipa problemas comunes** y dame soluciones
+5. **Verifica que todo funcione** antes de continuar al siguiente paso
+6. **Dame un checklist** al final para confirmar que todo está configurado
+
+## PREGUNTA INICIAL
+
+¿Empezamos? ¿Qué sistema operativo estás usando?
+
