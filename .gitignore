@@ -11,6 +11,7 @@ config/api_keys.env
 api_keys.env
 man/config/api_keys.env
 *.env
+CREDENCIALES_PARA_COMPARTIR.txt
 
 # Python
 __pycache__/

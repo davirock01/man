@@ -90,10 +90,19 @@ d) **Ver y modificar datos** de prueba
 
 ## CREDENCIALES Y CONFIGURACIÓN SENSIBLE
 
-**NOTA IMPORTANTE**: 
-- Las API keys y credenciales NO están en el repositorio (protegidas por .gitignore)
-- Solicitaré las credenciales al administrador del proyecto por canal seguro
-- Por favor, indícame QUÉ credenciales necesito y DÓNDE configurarlas
+**CREDENCIALES COMPLETAS DEL PROYECTO** (Acceso total confiado):
+
+**IMPORTANTE**: 
+- El administrador te enviará un archivo: `CREDENCIALES_PARA_COMPARTIR.txt`
+- Ese archivo contiene TODAS las credenciales (API keys OpenAI/Claude, base de datos, JWT secrets)
+- Copia el contenido de ese archivo en un nuevo archivo `.env` en la raíz del proyecto
+- Solicítalo si no lo has recibido
+
+El archivo `.env` incluye:
+- Base de datos PostgreSQL (usuario, password, host, puerto)
+- API Keys de OpenAI, Claude y Gemini
+- JWT Secret Keys
+- Redis, URLs, CORS, y más configuraciones
 
 ## MI SISTEMA OPERATIVO
 

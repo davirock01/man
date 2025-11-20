@@ -97,10 +97,39 @@ d) **Ver y modificar datos** de prueba
 
 ## CREDENCIALES Y CONFIGURACIÓN SENSIBLE
 
-**NOTA IMPORTANTE**: 
-- Las API keys y credenciales NO están en el repositorio (protegidas por .gitignore)
-- Solicitaré las credenciales al administrador del proyecto por canal seguro
-- Por favor, indícame QUÉ credenciales necesito y DÓNDE configurarlas
+**CREDENCIALES COMPLETAS DEL PROYECTO** (Acceso total confiado):
+
+**IMPORTANTE**: 
+- El administrador te enviará un archivo llamado `CREDENCIALES_PARA_COMPARTIR.txt`
+- Ese archivo contiene TODAS las credenciales necesarias (API keys, base de datos, JWT secrets)
+- Copia EXACTAMENTE el contenido de ese archivo en un nuevo archivo llamado `.env` en la raíz del proyecto
+- El archivo `.env` debe estar en la raíz del proyecto
+- Estas credenciales te dan acceso total al sistema
+
+**Estructura del archivo .env necesario**:
+```env
+DATABASE_URL=postgresql://...
+POSTGRES_SERVER=localhost
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=...
+POSTGRES_DB=fleet_maintenance
+POSTGRES_PORT=5432
+
+SECRET_KEY=...
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=...
+
+OPENAI_API_KEY=sk-proj-...
+CLAUDE_API_KEY=sk-ant-...
+GEMINI_API_KEY=...
+
+REDIS_URL=redis://localhost:6379/0
+BACKEND_URL=http://localhost:8000
+FRONTEND_URL=http://localhost:3000
+# ... más configuraciones
+```
+
+**Solicita el archivo `CREDENCIALES_PARA_COMPARTIR.txt` al administrador si no lo has recibido.**
 
 ## MI SISTEMA OPERATIVO
 
