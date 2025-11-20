@@ -1,0 +1,53 @@
+═══════════════════════════════════════════════════════════════
+  SI EL SCRIPT SE CIERRA INMEDIATAMENTE
+═══════════════════════════════════════════════════════════════
+
+PROBLEMA:
+El script ABRIR_APP.bat se cierra sin mostrar mensajes.
+
+───────────────────────────────────────────────────────────────
+SOLUCIÓN 1: Usar versión con pausa
+───────────────────────────────────────────────────────────────
+
+Doble clic en:
+
+    ⭐ ABRIR_APP_CON_PAUSA.bat
+
+Esta versión:
+✅ Se detiene en cada error para que lo veas
+✅ Muestra logs detallados si algo falla
+✅ Espera antes de cerrar
+
+───────────────────────────────────────────────────────────────
+SOLUCIÓN 2: Ejecutar desde PowerShell/CMD
+───────────────────────────────────────────────────────────────
+
+1. Abre PowerShell
+2. Navega a la carpeta:
+   cd "C:\Users\User-PC\Desktop\software engineering\app\man"
+3. Ejecuta:
+   .\ABRIR_APP.bat
+
+Así verás todos los mensajes antes de que se cierre.
+
+───────────────────────────────────────────────────────────────
+CAUSA MÁS PROBABLE:
+───────────────────────────────────────────────────────────────
+
+No tienes la imagen Docker de Python descargada.
+
+SOLUCIÓN: Usa primero ARREGLAR_DOCKER_Y_ABRIR.bat
+
+───────────────────────────────────────────────────────────────
+VERIFICAR:
+───────────────────────────────────────────────────────────────
+
+1. Docker Desktop está corriendo
+2. Tienes imagen Python:
+   - Abre Docker Desktop
+   - Ve a "Images"
+   - Busca "python:3.11-slim"
+   - Si NO está, ejecuta: ARREGLAR_DOCKER_Y_ABRIR.bat
+
+═══════════════════════════════════════════════════════════════
+

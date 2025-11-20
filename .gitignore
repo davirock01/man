@@ -1,3 +1,17 @@
+# ============================================================
+# Fleet Maintenance System - .gitignore
+# ============================================================
+
+# API Keys y configuración sensible
+config/api_keys.env
+.env
+.env.local
+.env.*.local
+**/api_keys.env
+api_keys.env
+man/config/api_keys.env
+*.env
+
 # Python
 __pycache__/
 *.py[cod]
@@ -7,6 +21,7 @@ __pycache__/
 env/
 venv/
 ENV/
+.venv
 build/
 develop-eggs/
 dist/
@@ -22,10 +37,13 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 .pytest_cache/
 .mypy_cache/
 .coverage
 htmlcov/
+.tox/
+.hypothesis/
 
 # Node / Frontend
 node_modules/
@@ -33,6 +51,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+.npm
+.yarn-integrity
 dist/
 build/
 .next/
@@ -42,11 +62,17 @@ build/
 .vite/
 *.tsbuildinfo
 
+# React Native
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+*.orig.*
+web-build/
+
 # Entornos / IDEs
-.env
-.env.local
-.env.*.local
-*.env
 .vscode/
 .idea/
 *.swp
@@ -63,12 +89,7 @@ docker-compose.override.yml
 *.sqlite
 *.db
 *.sql.backup
-
-# API Keys (IMPORTANTE)
-**/api_keys.env
-api_keys.env
-config/api_keys.env
-man/config/api_keys.env
+fleet_maintenance.db
 
 # Archivos temporales
 *.tmp
@@ -89,3 +110,6 @@ temp/
 *.tar.gz
 *.rar
 
+# Uploads y storage local
+uploads/
+storage/

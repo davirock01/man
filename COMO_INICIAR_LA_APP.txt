@@ -1,0 +1,69 @@
+═══════════════════════════════════════════════════════════════
+  CÓMO INICIAR LA APP - RECORDATORIO RÁPIDO
+═══════════════════════════════════════════════════════════════
+
+📍 UBICACIÓN: 
+C:\Users\User-PC\Desktop\software engineering\app\man
+
+───────────────────────────────────────────────────────────────
+🚀 PRIMERA VEZ (o si hay problemas):
+───────────────────────────────────────────────────────────────
+
+Doble clic en:
+
+    ⭐ ARREGLAR_DOCKER_Y_ABRIR.bat
+
+(Descarga imagen Python y configura todo)
+
+───────────────────────────────────────────────────────────────
+✅ DESPUÉS (uso normal):
+───────────────────────────────────────────────────────────────
+
+Doble clic en:
+
+    ⭐ ABRIR_APP.bat
+
+(Inicia todo directamente con Docker)
+
+───────────────────────────────────────────────────────────────
+📦 CONTENEDORES DOCKER DE LA APP:
+───────────────────────────────────────────────────────────────
+
+Los verás en Docker Desktop como:
+
+    • fleet_backend   (Puerto 8000) - Backend API
+    • fleet_postgres  (Puerto 5435) - Base de datos
+    • fleet_redis     (Puerto 6380) - Cache
+
+───────────────────────────────────────────────────────────────
+🌐 URLs PARA ABRIR:
+───────────────────────────────────────────────────────────────
+
+    • http://localhost:3000  → Frontend (LOGIN AQUÍ)
+    • http://localhost:8000  → Backend API
+    • http://localhost:8000/api/docs → Documentación
+
+───────────────────────────────────────────────────────────────
+🔑 LOGIN:
+───────────────────────────────────────────────────────────────
+
+    Email:     coordinador@test.com
+    Password:  testpass123
+
+───────────────────────────────────────────────────────────────
+🆘 SI HAY PROBLEMAS:
+───────────────────────────────────────────────────────────────
+
+    DIAGNOSTICO_COMPLETO.bat    → Ver qué está mal
+    VERIFICAR_DOCKER.bat        → Verificar Docker
+    DIAGNOSTICAR_BACKEND.bat    → Verificar backend
+
+───────────────────────────────────────────────────────────────
+📚 GUÍAS COMPLETAS:
+───────────────────────────────────────────────────────────────
+
+    GUIA_DEFINITIVA_ABRIR_APP.md  → Guía paso a paso
+    SOLUCION_PROBLEMA_DOCKER.md   → Si hay errores Docker
+
+═══════════════════════════════════════════════════════════════
+
