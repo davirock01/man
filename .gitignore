@@ -1,0 +1,91 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+build/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.vite/
+*.tsbuildinfo
+
+# Entornos / IDEs
+.env
+.env.local
+.env.*.local
+*.env
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# Database
+*.sqlite
+*.db
+*.sql.backup
+
+# API Keys (IMPORTANTE)
+**/api_keys.env
+api_keys.env
+config/api_keys.env
+man/config/api_keys.env
+
+# Archivos temporales
+*.tmp
+*.bak
+*.cache
+.temp/
+temp/
+
+# Certificados y claves
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+
+# Archivos grandes o binarios
+*.zip
+*.tar.gz
+*.rar
+
